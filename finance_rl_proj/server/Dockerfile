@@ -15,11 +15,10 @@ RUN pip install --upgrade pip setuptools wheel
 COPY pyproject.toml .
 COPY requirements.txt . 
 
-# Install dependencies (Add openai explicitly if not in your files)
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir .
 
 COPY . .
 
-# CRITICAL: The Space must start the server automatically
-CMD ["uvicorn", "finance_rl_proj.server.app:app", "--host", "0.0.0.0", "--port", "8000"]
+RUN pip install --no-cache-dir .
+
+CMD ["uvicorn", "finance_rl_proj.server.app:app", "--host", "0.0.0.0", "--port", "7860"]
