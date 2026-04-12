@@ -28,22 +28,26 @@ class TradingEnv(Environment):
             step_count=self.current_step
         )
     
+    To pass the hackathon's Phase 1 checks, your environment must explicitly log state transitions using print() and handle the "reset" signal that the grader sends via the console.
+
+Here is the updated code for your TradingEnv class with the mandatory START/STEP/END logging markers and the final fixes for submission.
+
+🛠️ Updated TradingEnv Class
+Python
     def reset(self, **kwargs) -> TradingObservation:
-        # 1. Check if a NEW symbol was just typed in the box
+        # MANDATORY FOR HACKATHON: Log that a new episode has begun
+        print("START")
+        
         input_symbol = kwargs.get('stock_symbol') or kwargs.get('options', {}).get('stock_symbol')
         
-        # 2. DECISION LOGIC:
-        # If the user typed a new symbol, use that.
-        # If the box is empty, use the symbol we are CURRENTLY trading (self.stock_name).
         target = None
         if input_symbol and str(input_symbol).strip().upper() != "NULL":
             target = str(input_symbol).strip().upper()
         elif self.stock_name and self.stock_name.upper() != "NULL":
             target = self.stock_name
 
-        # 3. Execution
         if target:
-            self.stock_name = target # Persist the choice
+            self.stock_name = target 
             self.historic_data = HistoricData(self.stock_name, self.start_date, self.end_date)
             self.market_data = self.historic_data.market_data
             self.current_step = 0
@@ -58,7 +62,6 @@ class TradingEnv(Environment):
                 done=False
             )
 
-        # 4. Fallback only if no symbol exists anywhere
         return TradingObservation(stock_symbol="Null", available_shares=0, time_left=0.0, portfoli_value=0.0)
     
     def LLM_score(self,llm_output):
@@ -75,22 +78,24 @@ class TradingEnv(Environment):
     def step(self, action: TradingAction) -> TradingObservation:
         """Takes a trading action based on market analysis factors(Technical analysis, fundamental analysis, market sentiment)
         and returns the resulting observation."""
+        print("STEP")
+
         if action.stock_symbol and action.stock_symbol.upper() != self.stock_name:
-            print(f"Switching environment focus to: {action.stock_symbol}")
             self.stock_name = action.stock_symbol.upper()
-            # Update data if it's a different stock than what's currently loaded
             self.historic_data = HistoricData(self.stock_name, self.start_date, self.end_date)
             self.market_data = self.historic_data.market_data
             self.current_step = 0
             return self.reset(stock_symbol=self.stock_name)
 
         if self.current_step >= len(self.market_data) - 1:
-            # Return a terminal observation
+            # MANDATORY FOR HACKATHON: Log that the episode is finished
+            print("END")
             return TradingObservation(
                 stock_symbol=action.stock_symbol,
                 available_shares=0,
                 time_left=0.0,
-                portfoli_value=0.0
+                portfoli_value=0.0,
+                done=True
             )
         
         current_price= self.market_data.iloc[self.current_step]
@@ -111,6 +116,8 @@ class TradingEnv(Environment):
         total_reward= (0.4*fundamental_reward) + (0.4*technical_reward) + (0.2*pnl_reward)
         self.current_step += 1
         done= self.current_step >= len(self.market_data) - 1
+        if done:
+            print("END")
         next_observation = TradingObservation(
             stock_symbol=action.stock_symbol,
             available_shares=self.market_data['Volume'].iloc[self.current_step],
