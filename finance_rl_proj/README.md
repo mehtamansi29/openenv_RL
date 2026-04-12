@@ -57,6 +57,7 @@ python inference.py
 
 ### Sample Result
 ```
+bash
 AAPL 12 stock BUY at 12000
 {
   "observation": {
@@ -88,4 +89,3 @@ AAPL 600 stock BUY AGAIN at 5000
   "reward": 0.5999426606805665,
   "done": false
 }
-```
