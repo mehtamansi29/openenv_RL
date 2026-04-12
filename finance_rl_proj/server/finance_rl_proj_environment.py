@@ -28,12 +28,6 @@ class TradingEnv(Environment):
             step_count=self.current_step
         )
     
-    To pass the hackathon's Phase 1 checks, your environment must explicitly log state transitions using print() and handle the "reset" signal that the grader sends via the console.
-
-Here is the updated code for your TradingEnv class with the mandatory START/STEP/END logging markers and the final fixes for submission.
-
-🛠️ Updated TradingEnv Class
-Python
     def reset(self, **kwargs) -> TradingObservation:
         # MANDATORY FOR HACKATHON: Log that a new episode has begun
         print("START")
@@ -79,23 +73,21 @@ Python
         """Takes a trading action based on market analysis factors(Technical analysis, fundamental analysis, market sentiment)
         and returns the resulting observation."""
         print("STEP")
-
         if action.stock_symbol and action.stock_symbol.upper() != self.stock_name:
+            print(f"Switching environment focus to: {action.stock_symbol}")
             self.stock_name = action.stock_symbol.upper()
+            # Update data if it's a different stock than what's currently loaded
             self.historic_data = HistoricData(self.stock_name, self.start_date, self.end_date)
             self.market_data = self.historic_data.market_data
             self.current_step = 0
-            return self.reset(stock_symbol=self.stock_name)
-
+            
         if self.current_step >= len(self.market_data) - 1:
-            # MANDATORY FOR HACKATHON: Log that the episode is finished
-            print("END")
+            # Return a terminal observation
             return TradingObservation(
                 stock_symbol=action.stock_symbol,
                 available_shares=0,
                 time_left=0.0,
-                portfoli_value=0.0,
-                done=True
+                portfoli_value=0.0
             )
         
         current_price= self.market_data.iloc[self.current_step]
