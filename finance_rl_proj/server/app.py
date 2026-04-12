@@ -23,7 +23,14 @@ Usage:
     # Or run directly:
     python -m server.app
 """
-from openenv.core.env_server import create_web_interface_app
+try:
+    from openenv.core.env_server import create_web_interface_app
+except ImportError:
+    try:
+        from openenv.env_server import create_web_interface_app
+    except ImportError:
+        # Fallback for some specific versions of openenv
+        from openenv import create_web_interface_app
 from .finance_rl_proj_environment import TradingEnv
 from finance_rl_proj.models import TradingAction, TradingObservation
 
