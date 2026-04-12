@@ -1,0 +1,10 @@
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+.git/
+.DS_Store
+# Ignore the large library folders
+lib/
+site-packages/
