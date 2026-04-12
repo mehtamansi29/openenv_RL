@@ -67,43 +67,29 @@ class stock_analysis:
                     f"Score: 0.5"
                 )
     
-    def fundamental_analysis(self,action_taken:str):
-        """
-        Evaluates the 'Rationality Score' of an action based on 
-        Balance Sheets, P/E Ratios, and Growth metrics.
-        """
-        prompt = f"""
-        <task>Act as a Senior Equity Analyst. Evaluate the following trading decision.</task>
-        <context>
-        Stock: {self.stock_name}
-        Action Taken: {action_taken}
-        Fundamental Data: {self.fundamental_data.to_dict() if hasattr(self.fundamental_data, 'to_dict') else self.fundamental_data}
-        </context>
-        
-        <instructions>
-        1. Analyze the Debt-to-Equity, P/E Ratio, and Revenue Growth.
-        2. Determine if the '{action_taken}' action aligns with a sound long-term investment strategy.
-        3. Provide a reasoning trace.
-        4. Return a final 'Alignment Score' between 0.0 (Irresponsible) and 1.0 (Expert).
-        </instructions>
+    def analysis(self, action_taken:str):
+        recent_window = self.market_data.tail(5).to_dict()
+        fundamental_analysis_prompt= f"""
+            <task>Act as a Senior Equity Analyst. Evaluate the following trading decision.</task>
+            <context>
+            Stock: {self.stock_name}
+            Action Taken: {action_taken}
+            Fundamental Data: {self.fundamental_data.to_dict() if hasattr(self.fundamental_data, 'to_dict') else self.fundamental_data}
+            </context>
 
-        <format>
-        Reasoning: [Brief justification]
-        Score: [Numerical value only]
-        </format>
-        """
-        return self._get_llm_response(prompt)
-    
-    def technical_analysis(self,action_taken:str):
-        """
-        Evaluates the 'Timing Score' based on price trends, 
-        volatility, and market sentiment.
-        """
-        # Assuming market_data contains recent OHLCV and perhaps news snippets
-        recent_window = self.market_data.tail(5).to_dict() 
-        
-        prompt = f"""
-        <task>Act as a Quantitative Technical Strategist.</task>
+            <instructions>
+            1. Analyze the Debt-to-Equity, P/E Ratio, and Revenue Growth.
+            2. Determine if the '{action_taken}' action aligns with a sound long-term investment strategy.
+            3. Provide a reasoning trace.
+            4. Return a final 'Score' between 0.0 (Irresponsible) and 1.0 (Expert).
+            </instructions>
+
+            <format>
+            Reasoning: [Brief justification]
+            Score: [Numerical value only]
+            </format>
+            """
+        technical_analysis_prompt = f"""<task>Act as a Quantitative Technical Strategist.</task>
         <context>
         Recent Market Activity (5-day window): {recent_window}
         Action Attempted: {action_taken}
@@ -121,6 +107,6 @@ class stock_analysis:
         Timing Reward: [Numerical value only]
         </format>
         """
-        return self._get_llm_response(prompt)
-
-    
+        fundamental_analysis= self._get_llm_response(fundamental_analysis_prompt)
+        technical_analysis= self._get_llm_response(technical_analysis_prompt)
+        return fundamental_analysis, technical_analysis

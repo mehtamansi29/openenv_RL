@@ -54,3 +54,38 @@ uvicorn finance_rl_proj.server.app:app --host 0.0.0.0 --port 8000
 Execute the mandatory inference script to verify logging compliance:
 ```bash
 python inference.py
+
+### Sample Result
+```
+AAPL 12 stock BUY at 12000
+{
+  "observation": {
+    "stock_symbol": "AAPL",
+    "available_shares": 146322800,
+    "time_left": 252.0,
+    "portfoli_value": 860.3596801757812
+  },
+  "reward": 0.5167338874915777,
+  "done": false
+}AAPL 6 stock SELL at 5000{
+  "observation": {
+    "stock_symbol": "AAPL",
+    "available_shares": 118387200,
+    "time_left": 251.0,
+    "portfoli_value": 433.6075744628906
+  },
+  "reward": 0.4931552507509492,
+  "done": false
+}
+AAPL 600 stock BUY AGAIN at 5000
+{
+  "observation": {
+    "stock_symbol": "AAPL",
+    "available_shares": 108872000,
+    "time_left": 250.0,
+    "portfoli_value": 43156.837463378906
+  },
+  "reward": 0.5999426606805665,
+  "done": false
+}
+```

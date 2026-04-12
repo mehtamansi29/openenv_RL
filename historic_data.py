@@ -16,13 +16,9 @@ def sanitize_stock_symbol(symbol: str) -> str:
     if not symbol or not isinstance(symbol, str):
         raise ValueError(f"Invalid stock symbol: {symbol}")
     
-    # Remove common prefixes like '$' and whitespace
     cleaned = symbol.strip().upper()
     cleaned = cleaned.lstrip('$')
-    
-    # Remove any remaining non-alphanumeric characters except '.' and '-'
     cleaned = ''.join(c for c in cleaned if c.isalnum() or c in '.-')
-    
     if not cleaned:
         raise ValueError(f"Invalid stock symbol after cleaning: {symbol}")
     
@@ -40,29 +36,6 @@ class HistoricData:
         self.market_data = self.get_historic_data()
         self.fundamental_data = self.get_fundamental_data()
     
-    def get_historic_data(self):    
-        """
-        Fetches historical stock data for a given stock symbol and date range.
-
-        Args:
-            stock_name (str): The stock symbol to fetch data for.
-            start_date (str): The start date for the data in 'YYYY-MM-DD' format.
-            end_date (str): The end date for the data in 'YYYY-MM-DD' format.
-        Returns:
-            pd.DataFrame: A DataFrame containing the historical stock data.
-        """
-        stock = yf.Ticker(self.stock_name)
-        data = stock.history(start=self.start_date, end=self.end_date)
-        
-        if data.empty:
-            raise ValueError(
-                f"No historical data found for '{self.stock_name}' between "
-                f"{self.start_date} and {self.end_date}. "
-                "Please verify the stock symbol is correct and the stock has "
-                "trading data for the specified date range."
-            )
-        
-        return data
 
     def get_fundamental_data(self):
         """

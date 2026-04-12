@@ -53,4 +53,8 @@ uvicorn finance_rl_proj.server.app:app --host 0.0.0.0 --port 8000
 ### 4.Running Inference (Validation)
 Execute the mandatory inference script to verify logging compliance:
 ```bash
+<<<<<<< HEAD
 python inference.py
+=======
+python inference.py
+>>>>>>> 703911fe564f38ddcc7d0bd546a0d73b9d8d88d4
