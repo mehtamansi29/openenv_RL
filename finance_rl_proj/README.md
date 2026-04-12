@@ -56,8 +56,7 @@ Execute the mandatory inference script to verify logging compliance:
 python inference.py
 
 ### Sample Result
-```
-bash
+```bash
 AAPL 12 stock BUY at 12000
 {
   "observation": {
