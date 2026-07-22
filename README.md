@@ -91,7 +91,7 @@ AAPL 600 stock BUY AGAIN at 5000
 
 
 Based on the project's design and selected text, here are the key advantages of this approach:
-
+```
 ---
 
 ## Key Advantages
