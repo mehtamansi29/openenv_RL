@@ -88,3 +88,35 @@ AAPL 600 stock BUY AGAIN at 5000
   "reward": 0.5999426606805665,
   "done": false
 }
+
+
+Based on the project's design and selected text, here are the key advantages of this approach:
+
+---
+
+## Key Advantages
+
+### 1. High-Fidelity Reward Signals via Reasoning LLM
+
+* **Beyond Pure PnL:** Traditional Reinforcement Learning (RL) in trading relies almost exclusively on immediate numerical metrics like Profit & Loss (PnL) or Sharpe ratio, which often leads to overfitting, high turnover, or erratic luck-based trading strategies.
+* **Domain-Informed Evaluation:** By leveraging **DeepSeek-R1**, the environment evaluates *why* a trading decision was made, scoring actions based on **fundamental and technical analysis** rather than raw financial output alone. This guides the agent toward financially sound strategies.
+
+---
+
+### 2. Autonomous Agentic RL
+
+* **Adaptive Decision-Making:** Instead of relying on static, hardcoded trading rules, an agentic RL setup allows trading models to continuously learn, adapt, and refine strategies based on dynamic market states.
+* **Structured Action & Observation Space:** Utilizing strict Pydantic schemas (`models.py`) ensures clean data flows between the market state, the agent's actions (e.g., BUY, SELL), and the reward mechanism.
+
+---
+
+### 3. Realistic Backtesting with Real-World Data
+
+* **Historical Accuracy:** Integration with market data APIs (like `yfinance` via `historic_data.py`) allows the agent to train and validate across actual historical price movements, realistic stock volumes, and portfolio constraints.
+
+---
+
+### 4. Standardized & Reproducible Infrastructure
+
+* **OpenEnv Standard:** Built specifically for the Meta x Hugging Face OpenEnv framework, ensuring compliance with standard evaluation pipelines (`inference.py`).
+* **Easy Deployment & Scalability:** Packaged with Docker and exposed via a FastAPI server, making the environment easy to deploy, reproduce, and benchmark locally or in Hugging Face Spaces.
